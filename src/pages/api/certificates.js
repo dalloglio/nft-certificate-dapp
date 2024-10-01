@@ -1,7 +1,5 @@
+import { contractAbi, contractAddress } from "@/utils";
 import { ethers } from "ethers";
-import NFT from "../../../../nft/artifacts/contracts/NFT.sol/NFT.json";
-
-const contractAddress = "0x5FbDB2315678afecb367f032d93F642f64180aa3";
 
 export default async function handler(req, res) {
   if (req.method === "GET") {
@@ -9,15 +7,27 @@ export default async function handler(req, res) {
       const provider = new ethers.JsonRpcProvider("http://127.0.0.1:8545");
       const signer = await provider.getSigner();
       const address = await signer.getAddress();
-      const contract = new ethers.Contract(contractAddress, NFT.abi, provider);
+      const contract = new ethers.Contract(
+        contractAddress,
+        contractAbi,
+        provider
+      );
 
       const certificates = [];
 
       const ownedCertificates = await contract.getOwnedCertificates(address);
 
-      for (let i = 1; i <= ownedCertificates.length; i++) {
-        const uri = await contract.uri(i);
-        certificates.push({ id: i, uri });
+      for (let id = 1; id <= ownedCertificates.length; id++) {
+        const uri = await contract.uri(id);
+        const certificate = await contract.getMetadata(id);
+        const [studentName, courseName, completionDate] = certificate;
+        certificates.push({
+          id,
+          uri,
+          studentName,
+          courseName,
+          completionDate,
+        });
       }
 
       res.status(200).json(certificates);

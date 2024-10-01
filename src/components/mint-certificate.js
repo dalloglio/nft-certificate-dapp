@@ -7,8 +7,6 @@ const MintCertificate = () => {
   const [studentName, setStudentName] = useState("Ricardo Pires");
   const [courseName, setCourseName] = useState("Blockchain");
   const [completionDate, setCompletionDate] = useState("2024-09-01");
-  const [institution, setInstitution] = useState("XYZ");
-  const [hours, setHours] = useState("10");
   const [alert, setAlert] = useState({ severity: null, message: null });
 
   const mintCertificate = async (e) => {
@@ -19,9 +17,7 @@ const MintCertificate = () => {
         1,
         studentName,
         courseName,
-        completionDate,
-        institution,
-        hours
+        completionDate
       );
       await tx.wait();
       setAlert({
@@ -40,7 +36,7 @@ const MintCertificate = () => {
   return (
     <div>
       <Typography variant="h5">Mint Certificate</Typography>
-      <Paper square={true} sx={{ p: 2, my: 2 }} elevation={2}>
+      <Paper square sx={{ p: 2, my: 2 }} elevation={2}>
         <form onSubmit={mintCertificate} autoComplete="off">
           <TextField
             label="Student Name"
@@ -73,28 +69,7 @@ const MintCertificate = () => {
             required
           />
 
-          <TextField
-            label="Institution"
-            value={institution}
-            onChange={(e) => setInstitution(e.target.value)}
-            variant="filled"
-            margin="normal"
-            fullWidth
-            required
-          />
-
-          <TextField
-            type="number"
-            label="Hours"
-            value={hours}
-            onChange={(e) => setHours(e.target.value)}
-            variant="filled"
-            margin="normal"
-            fullWidth
-            required
-          />
-
-          <Button type="submit" variant="contained" size="large">
+          <Button type="submit" variant="contained" size="large" fullWidth>
             Mint Certificate
           </Button>
         </form>
